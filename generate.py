@@ -4,18 +4,19 @@ from datasets import load_dataset
 
 
 
-def select_random_problem(difficulty):
+def select_random_problem(difficulty,language):
     """Select a random problem from the dataset's training split filtered by difficulty."""
     # Load the LeetCode dataset
     dataset = load_dataset("greengerong/leetcode")
     difficulty = difficulty.replace('Novice','Easy').replace('Intermediate','Medium').replace('Expert','Hard')
     # Filter out problems with a valid 'difficulty' field and match the chosen difficulty
     problems = [p for p in dataset['train'] if p['difficulty'] and p['difficulty'].lower() == difficulty.lower()]
-
+    language = language.replace('cpp','c++')
     if not problems:
         raise ValueError(f"No problems found for difficulty level '{difficulty}'.")
-
-    return random.choice(problems)
+    problem = random.choice(problems)
+    solution = problem.get(language.lower())
+    return problem, solution
 
 
 def generate_hint(problem, conversation_history, language):

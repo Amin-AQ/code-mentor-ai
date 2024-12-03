@@ -1,6 +1,6 @@
 import streamlit as st
-
 from streamlit_monaco import st_monaco
+from generate import select_random_problem, generate_hint
 
 st.title("Code Mentor")
 with st.sidebar:
@@ -37,6 +37,9 @@ with st.sidebar:
         difficulty = difficulty_option_map[difficulty_options_pills]
     st.markdown(f'Your choosen difficulty is: {difficulty}')
 
+    if st.button('Get Problem', help='Get a random problem based on your selected difficulty level.'):
+        problem, solution = select_random_problem(difficulty,language)
+
 content = st_monaco(
     value="",
     height="200px",
@@ -46,5 +49,14 @@ content = st_monaco(
     theme="vs-dark",
 )
 
-if st.button("Get content"):
-    st.markdown(f'```{language}\n{content}')
+hint_button = st.button("Get a Hint")
+
+messages = st.container(height=200)
+chat_input = st.chat_input("Say something")
+
+if hint_button:
+    messages.chat_message("user").write('Give me a hint.')
+
+if prompt := chat_input:
+    messages.chat_message("user").write(prompt)
+    messages.chat_message("assistant").write(f"Echo: {prompt}")

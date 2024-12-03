@@ -2,8 +2,10 @@ import streamlit as st
 from streamlit_monaco import st_monaco
 from generate import select_random_problem, generate_hint
 
-st.title("Code Mentor")
+st.set_page_config(page_title='CodeMentorAI', layout='wide')
+
 with st.sidebar:
+    st.title('CodeMentor AI')
     language_option_map = {
         0: "python",
         1: "cpp",
@@ -37,26 +39,48 @@ with st.sidebar:
         difficulty = difficulty_option_map[difficulty_options_pills]
     st.markdown(f'Your choosen difficulty is: {difficulty}')
 
-    if st.button('Get Problem', help='Get a random problem based on your selected difficulty level.'):
-        problem, solution = select_random_problem(difficulty,language)
+    get_problem_button = st.button('Get Problem', help='Get a random problem based on your selected difficulty level.')
+        
+col1, col2 = st.columns([0.5,0.5],gap="large")
 
-content = st_monaco(
-    value="",
-    height="200px",
-    language=language,
-    lineNumbers=True,
-    minimap=False,
-    theme="vs-dark",
-)
+if get_problem_button:
+    problem, solution = select_random_problem(difficulty,language)
+    st.session_state.conversation_history = ""
+    st.session_state.problem = problem
+    st.session_state.solution = solution
 
-hint_button = st.button("Get a Hint")
+if "problem" in st.session_state:
+    with col1:
+        problem = st.session_state.problem
+        st.header(problem["title"])
+        st.subheader(f"Difficulty: {problem['difficulty']}")
+        st.markdown(problem["content"])
 
-messages = st.container(height=200)
-chat_input = st.chat_input("Say something")
+with col2:
+    content = st_monaco(
+        value="",
+        height="300px",
+        language=language,
+        lineNumbers=True,
+        minimap=False,
+        theme="vs-dark",
+    )
 
-if hint_button:
-    messages.chat_message("user").write('Give me a hint.')
+    hint_button = st.button("Get a Hint")
 
-if prompt := chat_input:
-    messages.chat_message("user").write(prompt)
-    messages.chat_message("assistant").write(f"Echo: {prompt}")
+    messages = st.container(height=200)
+    chat_input = st.chat_input("Say something")
+
+    if hint_button:
+        messages.chat_message("user").write('Give me a hint.')
+        st.session_state.conversation_history+=f"User: Give me a hint.\n```{language}\n{content}"
+        hint = generate_hint(st.session_state.problem,st.session_state.conversation_history,language)
+        messages.chat_message("assistant").write(hint)
+        st.session_state.conversation_history+=f"Mentor: {hint}"
+
+    if prompt := chat_input:
+        messages.chat_message("user").write(prompt)
+        st.session_state.conversation_history+=f"User: {prompt}\n```{language}\n{content}"
+        hint = generate_hint(st.session_state.problem,st.session_state.conversation_history,language)
+        messages.chat_message("assistant").write(hint)
+        st.session_state.conversation_history+=f"Mentor: {hint}"

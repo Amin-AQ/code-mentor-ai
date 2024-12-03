@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_monaco import st_monaco
 from generate import select_random_problem, generate_hint
 
-st.set_page_config(page_title='CodeMentorAI', layout='wide')
+st.set_page_config(page_title='CodeMentorAI', layout='wide',page_icon=':material/data_object:')
 
 with st.sidebar:
     st.title('CodeMentor AI')

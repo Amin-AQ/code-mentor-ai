@@ -1,4 +1,4 @@
 streamlit
 streamlit_monaco
 datasets
-openai
+openai==0.28

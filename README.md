@@ -1,4 +1,4 @@
-# :material/data_object:  Code Mentor AI
+# 📄  Code Mentor AI
 
 A Streamlit app that provides random programming problems, coding hints, and interactive chat functionality for selected programming languages and difficulty levels.
 

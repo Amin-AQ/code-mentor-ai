@@ -1,9 +1,9 @@
 import openai
 import random
 from datasets import load_dataset
+import streamlit as st
 
-openai.api_key = "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"
-
+openai.api_key = st.secrets["OPENAI"]
 def select_random_problem(difficulty,language):
     """Select a random problem from the dataset's training split filtered by difficulty."""
     # Load the LeetCode dataset

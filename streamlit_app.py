@@ -41,7 +41,7 @@ with st.sidebar:
 
     get_problem_button = st.button('Get Problem', help='Get a random problem based on your selected difficulty level.')
         
-col1, col2 = st.columns([0.4,0.6],gap="medium")
+col1, col2 = st.columns([0.3,0.7],gap="medium")
 
 if get_problem_button:
     problem, solution = select_random_problem(difficulty,language)
@@ -59,14 +59,14 @@ if "problem" in st.session_state:
 with col2:
     content = st_monaco(
         value="",
-        height="300px",
+        height="280px",
         language=language,
         lineNumbers=True,
         minimap=False,
         theme="vs-dark",
     )
 
-    hint_button = st.button("Get a Hint")
+    hint_button = st.button("Get a Hint",use_container_width=True)
 
     messages = st.container(height=200)
     chat_input = st.chat_input("Say something")

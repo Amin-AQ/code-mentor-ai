@@ -41,7 +41,7 @@ with st.sidebar:
 
     get_problem_button = st.button('Get Problem', help='Get a random problem based on your selected difficulty level.')
         
-col1, col2 = st.columns([0.5,0.5],gap="large")
+col1, col2 = st.columns([0.4,0.6],gap="medium")
 
 if get_problem_button:
     problem, solution = select_random_problem(difficulty,language)
